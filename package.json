@@ -2,12 +2,14 @@
   "name": "nodejs-basic-tasks-ru",
   "version": "1.0.0",
   "description": "Node.JS Course Materials",
+  "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --no-warnings --ignore=node_modules/** **/*.test.js",
     "lint": "eslint --ignore-pattern 'public' --ignore-pattern '*.test.js' --ignore-pattern 'client' ."
   },
   "keywords": [],
   "author": "Sergey Zelenov",
+  "type": "module",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.8.4",
