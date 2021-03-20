@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "Sergey Zelenov",
-  "type": "module",
+  "type": "commonjs",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.8.4",
