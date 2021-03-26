@@ -12,11 +12,15 @@ class LimitSizeStream extends stream.Transform {
 
   _transform(chunk, encoding, callback) {
     let error;
-    this.totalSize += chunk.length;
-    // console.log('totalSize: ', this.totalSize);
+    try {
+      this.totalSize += chunk.length;
+      // console.log('totalSize: ', this.totalSize);
 
-    if (this.totalSize > this.#limit) error = new LimitExceededError();
+      if (this.totalSize > this.#limit) throw new LimitExceededError();
 
+    } catch (e) {
+      error = e;
+    }
 
     callback(error, chunk);
   }
