@@ -17,6 +17,7 @@ class LineSplitStream extends stream.Transform {
     // console.log('lastLine: ', lastLine);
 
     for (let line of lines) {
+
       this.push(line);
     }
 
@@ -34,6 +35,7 @@ class LineSplitStream extends stream.Transform {
     if (this.remainder) {
       this.push(this.remainder);
     }
+
     callback();
   }
 }
