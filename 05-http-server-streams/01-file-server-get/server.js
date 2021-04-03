@@ -19,12 +19,13 @@ server.on('request', (req, res) => {
   if (isDir) {
     res.statusCode = 400;
     res.end();
+    return;
   }
 
   const filepath = path.join(__dirname, 'files', pathname);
   console.log('filepath: ', filepath);
 
-  const readStream = createReadStream(filepath, { highWaterMark: 2 ** 16, encoding: 'utf-8' });
+  const readStream = createReadStream(filepath, { highWaterMark: 2 ** 16 });
 
   switch (req.method) {
     
@@ -55,7 +56,6 @@ server.on('request', (req, res) => {
         res.write(chunk);
         
       });
-
       
       break;
 
