@@ -32,11 +32,13 @@ module.exports = function receiveFile(filepath, req, res) {
     res.end('Internal server error');
 
     fs.unlink(filepath, (err) => {});
+    return;
   });
 
   writeStream
       .on('error', (err) => {
         if (err.code === 'EEXIST') {
+          console.log(`File уже создан 409`);
           res.statusCode = 409;
           res.end('File exists');
           return;
@@ -50,7 +52,8 @@ module.exports = function receiveFile(filepath, req, res) {
 
         fs.unlink(filepath, (err) => {});
       })
-      .on('close', () => {
+    .on('close', () => {
+        if (res.finished) return;
         res.statusCode = 201;
         res.end('File created');
       });

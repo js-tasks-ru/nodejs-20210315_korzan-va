@@ -74,3 +74,6 @@ describe('http-server-streams/file-server-get', () => {
     });
   });
 });
+
+// npm run test -- grep=^http-server-streams/file-server-get
+// npm run test server.test.js

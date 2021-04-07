@@ -1,12 +1,14 @@
 const url = require('url');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
+
 
 const receiveFile = require('./receiveFile');
 
 const server = new http.Server();
 
-server.on('request', (req, res) => {
+server.on('request', async (req, res) => {
   const pathname = url.parse(req.url).pathname.slice(1);
 
   if (pathname.includes('/') || pathname.includes('..')) {
@@ -16,9 +18,13 @@ server.on('request', (req, res) => {
   }
 
   const filepath = path.join(__dirname, 'files', pathname);
+  console.log('filepath: ', filepath);
 
+  
+  
   switch (req.method) {
     case 'POST':
+
       if (!filepath) {
         res.statusCode = 404;
         res.end('File not found');
