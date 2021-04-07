@@ -15,17 +15,16 @@ server.on('request', (req, res) => {
   console.log('pathname: ', pathname);
 
   // Проверка на вложенность
-  const isDir = req.url.split(`/`).length > 2;
-  if (isDir) {
+  if (pathname.includes('/') || pathname.includes('..')) {
     res.statusCode = 400;
-    res.end();
+    res.end('Nested paths are not allowed');
     return;
   }
 
   const filepath = path.join(__dirname, 'files', pathname);
   console.log('filepath: ', filepath);
 
-  const readStream = createReadStream(filepath, { highWaterMark: 2 ** 16 });
+  const readStream = createReadStream(filepath);
 
   switch (req.method) {
     
@@ -49,13 +48,7 @@ server.on('request', (req, res) => {
 
       });
 
-      let c = 1;
-      readStream.on(`data`, chunk => {
-        console.log('chunk №: ', c, ` length: `, chunk.length, ` bytes`);
-        c++;
-        res.write(chunk);
-        
-      });
+      readStream.pipe(res);
       
       break;
 

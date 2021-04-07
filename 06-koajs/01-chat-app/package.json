@@ -1,0 +1,23 @@
+{
+  "name": "koa-chat",
+  "version": "1.0.0",
+  "description": "В этом задании вам необходимо будет реализовать простой чат на koa.js, используя технологию  [long polling](http://learn.javascript.ru/xhr-longpoll).",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "cross-env NODE_ENV=test mocha --no-warnings --ignore=node_modules/** **/*.test.js"
+  },
+  "keywords": [
+    "chat"
+  ],
+  "author": "learnjs & sl@v4ik888",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
+    "nodemon": "^2.0.7"
+  }
+}
