@@ -18,50 +18,31 @@ const router = new Router();
 // ctx.assert(book, 404);
 // ctx.assert.equal('object', typeof ctx.body, 500, 'some dev did something wrong')
 
-let subscribers = [];
+let subscribers = new Set();
 
 
 router.get('/subscribe', async (ctx, next) => {
-  
-  console.log(`/subscribe`);
-  console.log('ctx: ', ctx);
+  const message = await new Promise((resolve, reject) => {
+    subscribers.add(resolve);
 
-  // await new Promise((resolve, reject) => {
-  //   const run = (message) => {
-  //     ctx.status = 200;
-  //     ctx.body = message;
-  //   };
-  // });
+    ctx.res.on('close', function() {
+      subscribers.delete(resolve);
+      resolve();
+    });
+  });
 
-  subscribers.push(new Promise((resolve, reject) => {
-    console.log(`Promise RUN`);
-    resolve((message) => {
-      console.log('message in promise: ', message);
-      
-      ctx.status = 200;
-      ctx.body = message;
-      console.log('ctx: ', ctx);
-      console.log('ctx.body: ', ctx.body);
-    })
-  }));
-
-  // ctx.status = 200;
-  // ctx.body = ctx.originalUrl;
-
-  // ctx.on(`close`, () => delete subscribers[id]);
+  ctx.body = message;
 });
 
 router.post('/publish', async (ctx, next) => {
   const { message } = ctx.request.body;
   if (!message?.trim()) {
-    // console.log('!message?.trim(): ', !message?.trim());
-
-    return next();
+    ctx.throw(400, 'required field `message` is missing');
   }
 
-  subscribers.forEach(item => {
-    console.log('item: ', item);
-    item.then(func => func(message));
+  subscribers.forEach(func => {
+    // console.log('func: ', func);
+    func(message);
     // ctx = item;
     // ctx.response.status = 200;
     // console.log(`message: `, message);
@@ -75,9 +56,10 @@ router.post('/publish', async (ctx, next) => {
     // ctx.res.statusCode = 200;
     // ctx.res.end(message);
 
-  subscribers = [];
+  subscribers.clear();
 
   console.log(`/publish body: `, message);
+  ctx.body = 'ok';
 });
 
 app.use(router.routes());
