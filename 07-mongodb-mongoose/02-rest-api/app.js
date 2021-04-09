@@ -5,6 +5,9 @@ const {categoryList} = require('./controllers/categories');
 
 const app = new Koa();
 
+// const dbName = `any-shop`;
+// const url = `mongodb://localhost:27017/${dbName}`;
+
 app.use(async (ctx, next) => {
   try {
     await next();
