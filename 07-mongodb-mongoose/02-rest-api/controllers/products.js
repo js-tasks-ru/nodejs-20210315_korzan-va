@@ -1,60 +1,38 @@
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
-
+const mapProduct = require('../mappers/product');
 
 module.exports.productsBySubcategory = async function productsBySubcategory(ctx, next) {
-  console.log(`productsBySubcategory start`);
-  // console.log(`ctx: `, ctx);
-  const url = ctx.request.url;
-  const urlPathIdx = url.indexOf(`?`);
+  console.log('START productsBySubcategory');
+  const {subcategory} = ctx.query;
+  console.log('ctx.query: ', ctx.query);
 
-  if (!urlPathIdx) {
-    console.log(`Нет ?`);
-    return
-  }
-  const urlPairs = url.slice(urlPathIdx + 1).split(`&`);
-  console.log('urlPairs: ', urlPairs);
+  if (!subcategory) return next();
 
-  const subcategoryPair = urlPairs.find(it => it.includes(`subcategory`))
-  if (!subcategoryPair) {
-    console.log(`Нет subcategory`);
-    // const productWithoutSubCategory = await Product.find({});
-
-    next();
-    // return productWithoutSubCategory;
-  }
-  // console.log('subcategoryPair: ', subcategoryPair);
-  const subcategory = subcategoryPair.split(`=`)[1];
-  console.log('subcategory: ', subcategory);
-
-  let products = await Product.find({ subcategory });
-  console.log('productBySubCategory: ', products);
-  if (!products) products = [];
-
-  ctx.body = { products };
-  // next();
+  const products = await Product.find({ subcategory: subcategory }).limit(20);
+  ctx.body = { products: products.map(mapProduct) };
 };
 
 module.exports.productList = async function productList(ctx, next) {
-  console.log(`productList start`);
-  console.log(`params: `, ctx.params);
-  console.log(`ctx.request.body: `, ctx.request.body);
-  let products = await Product.find({});
-  if (!products) products = [];
-  ctx.body = { products};
+  console.log(`START productList`);
+  const products = await Product.find().limit(20);
+
+  ctx.body = { products: products.map(mapProduct) };
 };
 
 module.exports.productById = async function productById(ctx, next) {
-  console.log(`productById start`);
-  console.log(`params: `, ctx.params);
-  const id = ctx.params.id;
+  console.log(`START productById`);
 
-  if (typeof id !== mongoose.Types.ObjectId) {
-    console.log(`Не валидный id...`);
-    ctx.body = `Не валидный id...`;
-    ctx.status = 400
+  if (!mongoose.Types.ObjectId.isValid(ctx.params.id)) {
+    ctx.throw(400, 'invalid product id');
   }
-  const products = await Product.find({id})
-  ctx.body = {};
+
+  const product = await Product.findById(ctx.params.id);
+
+  if (!product) {
+    ctx.throw(404, `no product with ${ctx.params.id} id`);
+  }
+
+  ctx.body = { product: mapProduct(product) };
 };
 
