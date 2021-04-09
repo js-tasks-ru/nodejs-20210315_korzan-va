@@ -19,7 +19,7 @@ app.use(async (ctx, next) => {
   }
 });
 
-const router = new Router({prefix: '/api'});
+const router = new Router({ prefix: '/api' });
 
 router.get('/products', productsByQuery);
 
