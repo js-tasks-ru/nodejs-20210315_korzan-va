@@ -10,5 +10,6 @@ module.exports = new GithubStrategy({
   scope: ['user:email'],
   session: false,
 }, function(accessToken, refreshToken, profile, done) {
-  authenticate('github', get(profile, 'emails[0].value'), profile.username, done);
+  // authenticate('github', profile, profile.username, done);
+  authenticate('github', get(profile, 'emails[0].value'), profile.username, done, profile);
 });
