@@ -16,9 +16,13 @@ module.exports.oauth = async function oauth(ctx, next) {
 };
 
 module.exports.oauthCallback = async function oauthCallback(ctx, next) {
+  console.log('oauthCallback body: ', ctx.request.body);
+
   const provider = ctx.request.body.provider;
 
   await passport.authenticate(provider, async (err, user, info) => {
+    console.log('err, user, info: ', err, user, info);
+    
     if (err) throw err;
 
     if (!user) {

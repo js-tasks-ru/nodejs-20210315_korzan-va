@@ -1,3 +1,8 @@
+// const { GITHUB_APP_ID, GITHUB_APP_SECRET } = require('./env');
+
+// process.env.GITHUB_APP_ID = GITHUB_APP_ID;
+// process.env.GITHUB_APP_SECRET = GITHUB_APP_SECRET;
+
 module.exports = {
   mongodb: {
     uri: (process.env.NODE_ENV === 'test') ?
