@@ -1,6 +1,7 @@
 const path = require('path');
 const Koa = require('koa');
 const Router = require('koa-router');
+const { NotAuthorized } = require('./libs/errors');
 const Session = require('./models/Session');
 const { v4: uuid } = require('uuid');
 const handleMongooseValidationError = require('./libs/validationErrors');
@@ -29,9 +30,21 @@ app.use(async (ctx, next) => {
   }
 });
 
+
 app.use((ctx, next) => {
+
   ctx.login = async function(user) {
+    // console.log('user.email: ', user.email);
+    ctx.user = user;
+
     const token = uuid();
+
+    const session = new Session({
+      token,
+      lastVisit: new Date(),
+      user: user._id
+    });
+    await session.save();
 
     return token;
   };
@@ -39,21 +52,45 @@ app.use((ctx, next) => {
   return next();
 });
 
-const router = new Router({prefix: '/api'});
+const router = new Router({ prefix: '/api' });
 
 router.use(async (ctx, next) => {
   const header = ctx.request.get('Authorization');
   if (!header) return next();
 
+  // console.log(`Есть заголовок - authorization: `, header);
+  if (header.includes(`Bearer`)) {
+    const token = header.split(` `)[1];
+
+    const session = await Session.findOne({ token }).populate(`user`);
+    // console.log('session: ', session);
+
+    if (session) {
+      ctx.user = session.user;
+
+      session.lastVisit = new Date();
+      session.user = session.user._id;
+      await session.save();
+
+      // console.log('ctx.user: ', ctx.user);
+
+    } else {
+      ctx.body = `Неверный аутентификационный токен`;
+      ctx.status = 401;
+      throw new NotAuthorized(`Неверный аутентификационный токен`);
+    }
+  }
+  
   return next();
 });
+
 
 router.post('/login', login);
 
 router.get('/oauth/:provider', oauth);
 router.post('/oauth_callback', handleMongooseValidationError, oauthCallback);
 
-router.get('/me', me);
+router.get('/me', mustBeAuthenticated, me);
 
 app.use(router.routes());
 
