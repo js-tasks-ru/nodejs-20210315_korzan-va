@@ -10,6 +10,13 @@ module.exports = new LocalStrategy(
           return done(null, false, 'Нет такого пользователя');
         }
 
+        if (user.verificationToken) {
+          console.log('user.verificationToken: ', user.verificationToken);
+          // ctx.status = 400;
+          // ctx.body = { error: "подтвердите email" }
+          return done(null, false, 'Подтвердите email');
+        }
+
         const isValidPassword = await user.checkPassword(password);
 
         if (!isValidPassword) {

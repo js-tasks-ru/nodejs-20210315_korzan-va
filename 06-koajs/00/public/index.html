@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo chat</title>
+  <script src="../scripts/browser.js"></script>
+</head>
+<body>
+  <p>Все посетители этой страницы будут видеть сообщения друг друга.</p>
+  <form name="publish">
+    <input type="text" name="message" />
+    <input type="submit" value="Отправить" />
+  </form>
+  
+  <div id="subscribe"></div>
+
+  <script>
+    new PublishForm(document.forms.publish, `publish`);
+    new SubscribePane(document.getElementById(`subscribe`), `subscribe?random=` + Math.random());
+  </script>
+</body>
+</html>
