@@ -128,8 +128,8 @@ describe('email/registration', () => {
         expect(user, 'verificationToken должен быть undefined').to.have
           .property('verificationToken', undefined);
 
-        // expect(response.data, 'с сервера должен вернуться token').to.has.property('token');
-        // console.log('response.data: ', response.data);
+        expect(response.data, 'с сервера должен вернуться token').to.has.property('token');
+        console.log('response.data: ', response.data);
       });
 
     it('при запросе /confirm с неправильным токеном - ошибка', async () => {

@@ -1,5 +1,4 @@
 const Koa = require('koa');
-const path = require('path');
 const { v4: uuid } = require('uuid');
 const Router = require('koa-router');
 const handleMongooseValidationError = require('./libs/validationErrors');
@@ -10,11 +9,11 @@ const {login} = require('./controllers/login');
 const {oauth, oauthCallback} = require('./controllers/oauth');
 const {me} = require('./controllers/me');
 const {register, confirm} = require('./controllers/registration');
+const {checkout, getOrdersList} = require('./controllers/orders');
 const Session = require('./models/Session');
 
 const app = new Koa();
 
-app.use(require('koa-static')(path.join(__dirname, 'public')));
 app.use(require('koa-bodyparser')());
 
 app.use(async (ctx, next) => {
@@ -34,6 +33,7 @@ app.use(async (ctx, next) => {
 
 app.use((ctx, next) => {
   ctx.login = async function(user) {
+    console.log('login: ');
     const token = uuid();
     await Session.create({token, user, lastVisit: new Date()});
 
@@ -77,17 +77,9 @@ router.get('/me', mustBeAuthenticated, me);
 router.post('/register', handleMongooseValidationError, register);
 router.post('/confirm', confirm);
 
+router.get('/orders', mustBeAuthenticated, getOrdersList);
+router.post('/orders', handleMongooseValidationError, mustBeAuthenticated, checkout);
+
 app.use(router.routes());
-
-// this for HTML5 history in browser
-const fs = require('fs');
-
-const index = fs.readFileSync(path.join(__dirname, 'public/index.html'));
-app.use(async (ctx) => {
-  if (ctx.url.startsWith('/api') || ctx.method !== 'GET') return;
-  
-  ctx.set('content-type', 'text/html');
-  ctx.body = index;
-});
 
 module.exports = app;

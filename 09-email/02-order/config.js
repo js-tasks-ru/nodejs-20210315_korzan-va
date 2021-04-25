@@ -8,7 +8,7 @@
 module.exports = {
   mongodb: {
     uri: (process.env.NODE_ENV === 'test') ?
-      'mongodb://localhost/8-module-1-task' :
+      'mongodb://localhost/8-module-2-task' :
       'mongodb://localhost/any-shop',
   },
   crypto: {
