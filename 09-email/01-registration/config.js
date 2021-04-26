@@ -1,3 +1,10 @@
+// const { GITHUB_APP_ID, GITHUB_APP_SECRET, SENDER_EMAIL, SENDER_EMAIL_PASSWORD } = require('./env');
+
+// process.env.GITHUB_APP_ID = GITHUB_APP_ID;
+// process.env.GITHUB_APP_SECRET = GITHUB_APP_SECRET;
+// process.env.SENDER_EMAIL = SENDER_EMAIL;
+// process.env.SENDER_EMAIL_PASSWORD = SENDER_EMAIL_PASSWORD;
+
 module.exports = {
   mongodb: {
     uri: (process.env.NODE_ENV === 'test') ?
@@ -36,7 +43,7 @@ module.exports = {
     },
   },
   mailer: {
-    user: '',
-    password: '',
+    user: process.env.SENDER_EMAIL,
+    password: process.env.SENDER_EMAIL_PASSWORD
   },
 };

@@ -4,7 +4,7 @@
   "description": "Node.JS Course Materials",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./08-authentication/03-sessions/index.js",
+    "dev": "nodemon ./09-email/02-order/index.js",
     "test": "cross-env NODE_ENV=test mocha --no-warnings --ignore=node_modules/** **/*.test.js",
     "lint": "eslint --ignore-pattern 'public' --ignore-pattern '*.test.js' --ignore-pattern 'client' ."
   },

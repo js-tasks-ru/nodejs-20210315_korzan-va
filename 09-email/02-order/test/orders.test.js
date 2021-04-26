@@ -11,11 +11,11 @@ const request = axios.create({
   validateStatus: () => true,
 });
 
-const Order = require('./../models/Order');
-const User = require('./../models/User');
-const Session = require('./../models/Session');
-const Category = require('./../models/Category');
-const Product = require('./../models/Product');
+const Order = require('../models/Order');
+const User = require('../models/User');
+const Session = require('../models/Session');
+const Category = require('../models/Category');
+const Product = require('../models/Product');
 const ObjectId = mongoose.Types.ObjectId;
 
 const expect = require('chai').expect;

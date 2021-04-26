@@ -3,6 +3,7 @@ module.exports = async function handleMongooseValidationError(ctx, next) {
     await next();
   } catch (err) {
     if (err.name !== 'ValidationError') throw err;
+    console.log('ValidationError: ');
 
     ctx.status = 400;
 
